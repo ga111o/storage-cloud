@@ -18,10 +18,6 @@ def list_files(directory):
             files_dict[dir_name].append(file)
     return dict(files_dict)
 
-@app.route('/uploads/<path:filename>', methods=['GET', 'POST'])
-def download_file(filename):
-    return send_from_directory(BASE_UPLOAD_FOLDER, filename, as_attachment=True)
-
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
@@ -42,23 +38,22 @@ def upload_file():
     all_files_and_dirs=list_files(BASE_UPLOAD_FOLDER)
     files_list_html =''    
 
-for dir_name, file_names in all_files_and_dirs.items():
-    if dir_name == '':
-        for filename in file_names:
-            files_list_html += f'<li><a href="/uploads/{filename}">{filename}</a></li>'    
-    else:
-        details_block=f'''
-            <details>
-                <summary>{dir_name}</summary>
-                <ul>'''
-        for filename in file_names:
-            details_block += f'<li><a href="/uploads/{dir_name}/{filename}">{filename}</a></li>'
-        details_block += '''
-                </ul>
-            </details>'''
-        if details_block not in files_list_html:
-            files_list_html+=details_block
-
+    for dir_name, file_names in all_files_and_dirs.items():
+        if dir_name == '':
+            for filename in file_names:
+                files_list_html += f'<li>{filename}</li>'    
+        else:
+            details_block=f'''
+                <details>
+                    <summary>{dir_name}</summary>
+                    <ul>'''
+            for filename in file_names:
+                details_block += f'<li>{filename}</li>'
+            details_block += '''
+                    </ul>
+                </details>'''
+            if details_block not in files_list_html:
+                files_list_html+=details_block
                 
     folders_options_html =''
     
