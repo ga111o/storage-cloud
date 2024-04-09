@@ -22,7 +22,6 @@ def list_files(directory):
 def download(filename):
     return send_from_directory(directory=BASE_UPLOAD_FOLDER, filename=filename, as_attachment=True)
 
-
 @app.route('/bowmfb94f89123mknmbjkvbao', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
@@ -41,45 +40,34 @@ def upload_file():
         file.save(os.path.join(upload_folder_path, filename))
 
     all_files_and_dirs=list_files(BASE_UPLOAD_FOLDER)
+    files_list_html =''    
 
-    files_list_html =''
-    
     for dir_name, file_names in all_files_and_dirs.items():
-        
         if dir_name == '':
             for filename in file_names:
-                files_list_html += f'<li>{filename}</li>'
-        
+                files_list_html += f'<li>{filename}</li>'    
         else:
-            
             details_block=f'''
                 <details>
                     <summary>{dir_name}</summary>
                     <ul>'''
-            
             for filename in file_names:
                 details_block += f'<li>{filename}</li>'
-            
             details_block += '''
                     </ul>
                 </details>'''
-                
             if details_block not in files_list_html:
                 files_list_html+=details_block
                 
-    
     folders_options_html =''
     
     for folder_name in FOLDERS:
-        
          folders_options_html += f'<option value="{folder_name}">{folder_name}</option>'
-    
-    
+
     return f'''
      <!doctype html>
      <title>Upload new File</title>
      <h1>Upload new File</h1>
-
       <form method=post enctype=multipart/form-data>
        Select a folder: 
        <select name=folder>{folders_options_html}</select><br/>
@@ -87,11 +75,8 @@ def upload_file():
        <input type=file name=file><br/>
        <input type=submit value=Upload>
       </form>
-
       Uploaded Files:<br/>
-     
       {files_list_html}
-
      '''
 
 if __name__ == '__main__':
