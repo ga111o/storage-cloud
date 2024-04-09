@@ -30,9 +30,7 @@ def upload_file():
 
         filename = secure_filename(file.filename)
         upload_folder_path = os.path.join(BASE_UPLOAD_FOLDER, folder)
-
         os.makedirs(upload_folder_path, exist_ok=True)
-
         file.save(os.path.join(upload_folder_path, filename))
 
     all_files_and_dirs=list_files(BASE_UPLOAD_FOLDER)
